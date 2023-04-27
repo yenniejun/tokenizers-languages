@@ -47,8 +47,8 @@ with st.sidebar:
 	    val_data = load_data()
 	st.success(f'Data loaded: {len(val_data)}')
 
-	with st.expander('Data Source: [Amazon Massive](https://huggingface.co/datasets/AmazonScience/massive/viewer/af-ZA/validation)'):
-		st.write("The data in this figure is the validation set of the Amazon Massive dataset, which consists of 2033 short sentences and phrases translated into 51 different languages. Learn more about the dataset from [Amazon's blog post](https://www.amazon.science/blog/amazon-releases-51-language-dataset-for-language-understanding)")
+	with st.expander('Data Source'):
+		st.write("The data in this figure is the validation set of the [Amazon Massive](https://huggingface.co/datasets/AmazonScience/massive/viewer/af-ZA/validation) dataset, which consists of 2033 short sentences and phrases translated into 51 different languages. Learn more about the dataset from [Amazon's blog post](https://www.amazon.science/blog/amazon-releases-51-language-dataset-for-language-understanding)")
 
 
 	st.subheader('Languages')
