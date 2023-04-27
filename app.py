@@ -66,7 +66,6 @@ with st.container():
 		subset_data = [val_data[val_data.lang==_lang][tokenizer_name] for _lang in languages]
 	
 	st.header('Tokenization in different languages')
-	st.divider()
 	fig = ff.create_distplot(subset_data, group_labels=languages, show_hist=show_hist)
 
 	fig.update_layout(
