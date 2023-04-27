@@ -33,11 +33,25 @@ with st.sidebar:
 	# TODO multi-select tokenizers
 	tokenizer_name = st.sidebar.selectbox('Select tokenizer', options=tokenizer_names_to_test, label_visibility='collapsed')
 
-	st.subheader('Data Source: [Amazon Massive](https://huggingface.co/datasets/AmazonScience/massive/viewer/af-ZA/validation)')
+	if tokenizer_name not in ['openai/gpt4']:
+		url = f'https://huggingface.co/{tokenizer_name}'
+		link = f'Tokenizer is available [on the HuggingFace hub]({url})'
+		st.markdown(link, unsafe_allow_html=True)
+	else:
+		link="Tokenized using [tiktoken](https://github.com/openai/tiktoken)"
+		st.markdown(link)
+
+
+	st.subheader('Data')
 	with st.spinner('Loading dataset...'):
 	    val_data = load_data()
 	st.success(f'Data loaded: {len(val_data)}')
-	
+
+	with st.expander('Data Source: [Amazon Massive](https://huggingface.co/datasets/AmazonScience/massive/viewer/af-ZA/validation)'):
+		st.write("The data in this figure is the validation set of the Amazon Massive dataset, which consists of 2033 short sentences and phrases translated into 51 different languages. Learn more about the dataset from [Amazon's blog post](https://www.amazon.science/blog/amazon-releases-51-language-dataset-for-language-understanding)")
+
+
+	st.subheader('Languages')
 	languages = st.multiselect(
 		'Select languages',
 		options=sorted(val_data.lang.unique()),
@@ -48,6 +62,9 @@ with st.sidebar:
 	
 	st.subheader('Figure')
 	show_hist = st.checkbox('Show histogram', value=False)
+
+
+
 	# dist_marginal = st.radio('Select distribution', options=['box', 'violin', 'rug'], horizontal=True)
 
 	# with st.spinner('Loading tokenizer...'):
@@ -82,8 +99,7 @@ with st.container():
 	for i, _lang in enumerate(languages):
 		metric_cols[i].metric(_lang, int(np.median(subset_df[subset_df.lang==_lang][tokenizer_name])))
 
-	if tokenizer_name not in ['openai/gpt4']:
-		url = f'https://huggingface.co/{tokenizer_name}'
-		link = f'[Find on the HuggingFace hub]({url})'
-		st.markdown(link, unsafe_allow_html=True)
+
+	with st.expander("About the project"):
+		st.write("The purpose of this project is to compare the tokenization length for different languages. For some tokenizers, tokenizing a message in one language may result in 15-20x more tokens than a comparable message in another language.")
 
