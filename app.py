@@ -29,15 +29,15 @@ tokenizer_names_to_test = [
 ]
 
 with st.sidebar:
-	st.subheader('Model')
+	st.subheader('Tokenizer')
 	# TODO multi-select tokenizers
-	tokenizer_name = st.sidebar.selectbox('Select tokenizer', options=tokenizer_names_to_test)
+	tokenizer_name = st.sidebar.selectbox('Select tokenizer', options=tokenizer_names_to_test, label_visibility='collapsed')
 
-	st.subheader('Data')
+	st.subheader('Data Source: [Amazon Massive](https://huggingface.co/datasets/AmazonScience/massive/viewer/af-ZA/validation)')
 	with st.spinner('Loading dataset...'):
 	    val_data = load_data()
 	st.success(f'Data loaded: {len(val_data)}')
-
+	
 	languages = st.multiselect(
 		'Select languages',
 		options=sorted(val_data.lang.unique()),
