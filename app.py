@@ -42,7 +42,8 @@ with st.sidebar:
 		'Select languages',
 		options=sorted(val_data.lang.unique()),
 		default=['English', 'Spanish' ,'Chinese'],
-		max_selections=6
+		max_selections=6,
+		label_visibility='collapsed'
 	)
 	
 	st.subheader('Figure')
