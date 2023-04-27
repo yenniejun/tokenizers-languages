@@ -11,6 +11,7 @@ import plotly.figure_factory as ff
 import plotly.express as px
 
 tokenizer_names_to_test = [
+  "openai/gpt4",
   "xlm-roberta-base",  # old style
   "bert-base-uncased",  # old style
   "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
@@ -51,11 +52,11 @@ with st.sidebar:
 	# st.success('Completed.')
 
 with st.container():
+	if tokenizer_name in val_data.columns:
+		subset_df = val_data[val_data.lang.isin(languages)]
+		subset_data = [val_data[val_data.lang==_lang][tokenizer_name] for _lang in languages]
 
-	tokenizer_name = 'num_tokens_openai'
-
-	subset_df = val_data[val_data.lang.isin(languages)]
-	subset_data = [val_data[val_data.lang==_lang][tokenizer_name] for _lang in languages]
+		
 	fig = ff.create_distplot(subset_data, group_labels=languages, show_hist=False)
 	st.plotly_chart(fig, use_container_width=True)
 
