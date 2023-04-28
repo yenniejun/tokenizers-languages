@@ -9,10 +9,20 @@ import seaborn as sns
 import numpy as np
 import plotly.figure_factory as ff
 import plotly.express as px
+import random
 
 @st.cache_data
 def load_data():
 	return pd.read_csv('MassiveDatasetValidationData.csv')
+
+def reload_example_text_data():
+	random_id = random.choice(val_data['id'])
+	tempdf = subset_df[subset_df['id']==random_id]
+	tempdf.set_index('lang', inplace=True)
+	tempdf = tempdf[['iso', 'text', tokenizer_name]]
+	tempdf.columns=['ISO', 'Text', 'Num Tokens']
+	tempdf.sort_values(by='ISO', inplace=True)
+	st.session_state.examplesdf  = tempdf
 
 # TODO allow new tokenizers from HF
 tokenizer_names_to_test = [
@@ -55,7 +65,7 @@ with st.sidebar:
 	languages = st.multiselect(
 		'Select languages',
 		options=sorted(val_data.lang.unique()),
-		default=['English', 'Spanish' ,'Chinese'],
+		default=['English', 'Spanish' ,'Chinese', 'Burmese'],
 		max_selections=6,
 		label_visibility='collapsed'
 	)
@@ -82,7 +92,7 @@ with st.container():
 		subset_df = val_data[val_data.lang.isin(languages)]
 		subset_data = [val_data[val_data.lang==_lang][tokenizer_name] for _lang in languages]
 	
-	st.header('Tokenization in different languages')
+	st.header('Compare tokenization in different languages')
 	fig = ff.create_distplot(subset_data, group_labels=languages, show_hist=show_hist)
 
 	fig.update_layout(
@@ -100,6 +110,22 @@ with st.container():
 		metric_cols[i].metric(_lang, int(np.median(subset_df[subset_df.lang==_lang][tokenizer_name])))
 
 
+	st.subheader('Example Texts')
+	
+	reload_example_text_data()
+	if st.button("🔄 Refresh"):
+		reload_example_text_data()
+
+	st.dataframe(st.session_state.examplesdf)  # Same as st.write(df)
+
+
+	
+
+
+
+
+
+
 	with st.expander("About the project"):
-		st.write("The purpose of this project is to compare the tokenization length for different languages. For some tokenizers, tokenizing a message in one language may result in 15-20x more tokens than a comparable message in another language.")
+		st.write("The purpose of this project is to compare the tokenization length for different languages. For some tokenizers, tokenizing a message in one language may result in 10-20x more tokens than a comparable message in another language (e.g. try English vs. Burmese). This is part of a larger project of measuring inequality in NLP.")
 
