@@ -113,7 +113,7 @@ with st.container():
 	st.subheader('Example Texts')
 	
 	reload_example_text_data()
-	if st.button("🔄 Refresh"):
+	if st.button("🔄 Randomly sample"):
 		reload_example_text_data()
 
 	st.dataframe(st.session_state.examplesdf)  # Same as st.write(df)
