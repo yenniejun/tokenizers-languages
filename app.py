@@ -18,11 +18,15 @@ def load_data():
 def reload_example_text_data():
 	random_id = random.choice(val_data['id'])
 	tempdf = subset_df[subset_df['id']==random_id]
-	tempdf.set_index('lang', inplace=True)
+	tempdf.rename(columns={'lang': 'Language'}, inplace=True)
+	tempdf.set_index('Language', inplace=True)
 	tempdf = tempdf[['iso', 'text', tokenizer_name]]
 	tempdf.columns=['ISO', 'Text', 'Num Tokens']
 	tempdf.sort_values(by='ISO', inplace=True)
 	st.session_state.examplesdf  = tempdf
+
+
+
 
 # TODO allow new tokenizers from HF
 tokenizer_names_to_test = [
@@ -56,6 +60,8 @@ with st.sidebar:
 	with st.spinner('Loading dataset...'):
 	    val_data = load_data()
 	st.success(f'Data loaded: {len(val_data)}')
+
+	# st.write(val_data.columns, val_data.head())
 
 	with st.expander('Data Source'):
 		st.write("The data in this figure is the validation set of the [Amazon Massive](https://huggingface.co/datasets/AmazonScience/massive/viewer/af-ZA/validation) dataset, which consists of 2033 short sentences and phrases translated into 51 different languages. Learn more about the dataset from [Amazon's blog post](https://www.amazon.science/blog/amazon-releases-51-language-dataset-for-language-understanding)")
@@ -91,35 +97,67 @@ with st.container():
 	if tokenizer_name in val_data.columns:
 		subset_df = val_data[val_data.lang.isin(languages)]
 		subset_data = [val_data[val_data.lang==_lang][tokenizer_name] for _lang in languages]
-	
-	st.header('Compare tokenization in different languages')
-	fig = ff.create_distplot(subset_data, group_labels=languages, show_hist=show_hist)
 
-	fig.update_layout(
-		title=dict(text=tokenizer_name, font=dict(size=25), automargin=True, yref='paper', ),
-		# title=tokenizer_name,
-		xaxis_title="Number of Tokens",
-    yaxis_title="Density",
-    # title_font_family='"Source Sans Pro", sans-serif'
-	) 
-	st.plotly_chart(fig, use_container_width=True)
+	# st.header(f'Comparing languages for {tokenizer_name}')
 
-	st.subheader('Median Token Length')
+	st.subheader(f'Median Token Length for `{tokenizer_name}`')
 	metric_cols = st.columns(len(languages))
 	for i, _lang in enumerate(languages):
 		metric_cols[i].metric(_lang, int(np.median(subset_df[subset_df.lang==_lang][tokenizer_name])))
 
 
-	st.subheader('Example Texts')
+	fig = ff.create_distplot(subset_data, group_labels=languages, show_hist=show_hist)
+
+	fig.update_layout(
+		title=dict(text='Token Distribution', font=dict(size=25), automargin=True, yref='paper', ),
+		# title='Distribution of tokens',
+		xaxis_title="Number of Tokens",
+    yaxis_title="Density",
+    height=500
+    # title_font_family='"Source Sans Pro", sans-serif'
+	) 
+	st.plotly_chart(fig, use_container_width=True)
+
 	
+
+
+
+	st.subheader('Example Texts')
 	reload_example_text_data()
 	if st.button("🔄 Randomly sample"):
 		reload_example_text_data()
-
 	st.dataframe(st.session_state.examplesdf)  # Same as st.write(df)
 
 
+	# val_median_data = val_data.groupby('lang')[tokenizer_name].apply(np.median)
+	# val_median_data = val_median_data.sort_values(ascending=False)
+	# val_median_data = val_median_data.reset_index()
+	# # val_median_data = val_median_data[val_median_data.lang.isin(languages)]
+	# val_median_data[tokenizer_name] = val_median_data[tokenizer_name].astype(int)
+	# val_median_data.columns = ['Language', 'Median Number of Tokens']
+	# # st.write(val_median_data.head())
+	# bar_fig = px.bar(
+	# 	val_median_data, 
+	# 	y='Language', 
+	# 	x='Median Number of Tokens', 
+	# 	text_auto='d', 
+	# 	orientation='h',
+	# 	hover_data=val_median_data.columns,
+	# 	height=1000,
+	# 	)
+	# bar_fig.update_traces(textfont_size=12, textangle=0, cliponaxis=False)
+	# bar_fig.update_layout(
+	# 			title=dict(text='Comparison of median token lengths', 
+	# 				font=dict(size=20), 
+	# 				automargin=True, yref='paper', ),
+	# 			)
+	# st.plotly_chart(bar_fig, use_container_width=True)
+
+
+
 	
+
+
 
 
 
