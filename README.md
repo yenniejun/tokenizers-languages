@@ -1,3 +1,16 @@
+---
+title: Tokenizers Languages
+emoji: 🐠
+colorFrom: pink
+colorTo: green
+sdk: streamlit
+sdk_version: 1.19.0
+app_file: app.py
+pinned: false
+license: cc
+---
+
+
 # LLM Tokenizers in Multiple Languages
 
 This is the repo for the [HuggingFace Space](https://huggingface.co/spaces/yenniejun/tokenizers-languages) corresponding with the article, [All languages are NOT created (tokenized) equal](https://blog.yenniejun.com/p/all-languages-are-not-created-tokenized). 
