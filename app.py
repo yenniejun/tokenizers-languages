@@ -43,6 +43,8 @@ tokenizer_names_to_test = [
 ]
 
 with st.sidebar:
+
+
 	st.subheader('Tokenizer')
 	# TODO multi-select tokenizers
 	tokenizer_name = st.sidebar.selectbox('Select tokenizer', options=tokenizer_names_to_test, label_visibility='collapsed')
@@ -78,6 +80,14 @@ with st.sidebar:
 	
 	st.subheader('Figure')
 	show_hist = st.checkbox('Show histogram', value=False)
+
+
+	st.subheader('About the project')
+	with st.expander("All languages are NOT created (tokenized) equal!"):
+
+		link="The purpose of this project is to compare the tokenization length for different languages. For some tokenizers, tokenizing a message in one language may result in 10-20x more tokens than a comparable message in another language (e.g. try English vs. Burmese). This is part of a larger project of measuring inequality in NLP. See the original article: [All languages are NOT created (tokenized) equal](https://blog.yenniejun.com/p/all-languages-are-not-created-tokenized)"
+		st.markdown(link)
+
 
 
 
@@ -164,6 +174,4 @@ with st.container():
 
 
 
-	with st.expander("About the project"):
-		st.write("The purpose of this project is to compare the tokenization length for different languages. For some tokenizers, tokenizing a message in one language may result in 10-20x more tokens than a comparable message in another language (e.g. try English vs. Burmese). This is part of a larger project of measuring inequality in NLP.")
-
+	
