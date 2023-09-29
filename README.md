@@ -13,7 +13,7 @@ license: cc
 
 # LLM Tokenizers in Multiple Languages
 
-This is the repo for the [HuggingFace Space](https://huggingface.co/spaces/yenniejun/tokenizers-languages) corresponding with the article, [All languages are NOT created (tokenized) equal](https://blog.yenniejun.com/p/all-languages-are-not-created-tokenized). 
+This is the repo for the [HuggingFace Space](https://huggingface.co/spaces/yenniejun/tokenizers-languages) corresponding with the article, [All languages are NOT created (tokenized) equal](https://www.artfish.ai/p/all-languages-are-not-created-tokenized). 
 
 
 ![Screenshot of the corresponding HuggingFace Space](img/screenshot_huggingface_space.png)
