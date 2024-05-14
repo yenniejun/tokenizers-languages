@@ -9,6 +9,8 @@ import seaborn as sns
 import numpy as np
 import plotly.figure_factory as ff
 import plotly.express as px
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 import random, glob
 
 @st.cache_data
@@ -50,12 +52,13 @@ tokenizer_names_to_test = [
 
 with st.sidebar:
 
-    st.header('All languages are NOT created (tokenized) equal!')
-    link="This project compares the tokenization length for different languages. For some tokenizers, tokenizing a message in one language may result in 10-20x more tokens than a comparable message in another language (e.g. try English vs. Burmese). This is part of a larger project of measuring inequality in NLP. See the original article: [All languages are NOT created (tokenized) equal](https://www.artfish.ai/p/all-languages-are-not-created-tokenized) on [Art Fish Intelligence](https://www.artfish.ai/)."
+	st.header('All languages are NOT created (tokenized) equal!')
+	link="This project compares the tokenization length for different languages. For some tokenizers, tokenizing a message in one language may result in 10-20x more tokens than a comparable message in another language (e.g. try English vs. Burmese)."
+	st.markdown(link)
+	link="This is part of a larger project of measuring inequality in NLP. See the original article: [All languages are NOT created (tokenized) equal](https://www.artfish.ai/p/all-languages-are-not-created-tokenized) on [Art Fish Intelligence](https://www.artfish.ai/)."
 	st.markdown(link)
 
-    st.divider()
-
+	st.header('Data Visualization')
 	st.subheader('Tokenizer')
 	# TODO multi-select tokenizers
 	tokenizer_name = st.sidebar.selectbox('Select tokenizer', options=tokenizer_names_to_test, label_visibility='collapsed')
@@ -131,7 +134,33 @@ with st.container():
 	) 
 	st.plotly_chart(fig, use_container_width=True)
 
-	
+
+	# Create figures using px.bar
+	shortest = val_data.groupby('lang')[tokenizer_name].median().sort_values().head(7).reset_index()
+	shortest["type"] = "shortest"
+	longest = val_data.groupby('lang')[tokenizer_name].median().sort_values().tail(7).reset_index()
+	longest["type"] = "longest"
+	combined = pd.concat([shortest, longest]).reset_index(drop=True).sort_values(by=tokenizer_name, ascending=False)
+	color_sequence = px.colors.qualitative.D3  # You can choose other built-in sequences or define your own
+	fig = px.bar(combined, x=tokenizer_name, y="lang", orientation='h', color='type', color_discrete_sequence=color_sequence)
+	fig.update_traces(hovertemplate='%{y}: %{x} tokens')
+	fig.update_layout(
+			title=dict(text='Top Langs with Shortest and Longest Median Token Lengths',
+			 font=dict(size=25), automargin=True, yref='paper', pad=dict(b=20)),  # Add more padding below the title
+			# title='Distribution of tokens',
+	    xaxis=dict(
+        title="Number of Tokens",
+        showgrid=True,   # Show vertical gridlines
+        gridwidth=1,     # Gridline width
+        gridcolor='LightGrey'  # Gridline color
+	    ),
+	    yaxis=dict(
+	        title="",
+	    ),
+	    height=400,
+	    showlegend=False  # Remove the legend
+		) 
+	st.plotly_chart(fig, use_container_width=True)
 
 
 
