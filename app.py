@@ -9,7 +9,7 @@ import seaborn as sns
 import numpy as np
 import plotly.figure_factory as ff
 import plotly.express as px
-import random
+import random, glob
 
 @st.cache_data
 def load_data():
@@ -31,6 +31,13 @@ def reload_example_text_data():
 # TODO allow new tokenizers from HF
 tokenizer_names_to_test = [
   "openai/gpt4",
+  "Xenova/gpt-4o", 
+  "Xenova/claude-tokenizer", 
+  "CohereForAI/aya-101",
+  "meta-llama/Meta-Llama-3-70B", 
+  "mistralai/Mixtral-8x22B-v0.1",
+  "google/gemma-7b",
+  "facebook/nllb-200-distilled-600M",  # Facebook
   "xlm-roberta-base",  # old style
   "bert-base-uncased",  # old style
   "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
@@ -38,12 +45,16 @@ tokenizer_names_to_test = [
   "StabilityAI/stablelm-base-alpha-7b",  # StableLM with Open Assistant
   "google/flan-t5-base",  # Flan T5 (better than T5), Google
   "facebook/mbart-large-50",  # Facebook
-  "facebook/nllb-200-distilled-600M",  # Facebook
   "EleutherAI/gpt-neox-20b",  # same as Pythia
 ]
 
 with st.sidebar:
 
+    st.header('All languages are NOT created (tokenized) equal!')
+    link="This project compares the tokenization length for different languages. For some tokenizers, tokenizing a message in one language may result in 10-20x more tokens than a comparable message in another language (e.g. try English vs. Burmese). This is part of a larger project of measuring inequality in NLP. See the original article: [All languages are NOT created (tokenized) equal](https://www.artfish.ai/p/all-languages-are-not-created-tokenized) on [Art Fish Intelligence](https://www.artfish.ai/)."
+		st.markdown(link)
+
+    st.divider()
 
 	st.subheader('Tokenizer')
 	# TODO multi-select tokenizers
@@ -80,14 +91,6 @@ with st.sidebar:
 	
 	st.subheader('Figure')
 	show_hist = st.checkbox('Show histogram', value=False)
-
-
-	st.subheader('About the project')
-	with st.expander("All languages are NOT created (tokenized) equal!"):
-
-		link="The purpose of this project is to compare the tokenization length for different languages. For some tokenizers, tokenizing a message in one language may result in 10-20x more tokens than a comparable message in another language (e.g. try English vs. Burmese). This is part of a larger project of measuring inequality in NLP. See the original article: [All languages are NOT created (tokenized) equal](https://www.artfish.ai/p/all-languages-are-not-created-tokenized)"
-		st.markdown(link)
-
 
 
 
