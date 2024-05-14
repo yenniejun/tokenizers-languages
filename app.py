@@ -52,7 +52,7 @@ with st.sidebar:
 
     st.header('All languages are NOT created (tokenized) equal!')
     link="This project compares the tokenization length for different languages. For some tokenizers, tokenizing a message in one language may result in 10-20x more tokens than a comparable message in another language (e.g. try English vs. Burmese). This is part of a larger project of measuring inequality in NLP. See the original article: [All languages are NOT created (tokenized) equal](https://www.artfish.ai/p/all-languages-are-not-created-tokenized) on [Art Fish Intelligence](https://www.artfish.ai/)."
-		st.markdown(link)
+	st.markdown(link)
 
     st.divider()
 
